@@ -2,15 +2,30 @@ using UnityEngine;
 
 public class Jump_boost : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] float duration = 10f;
+
+    bool collected;
+
+    void OnTriggerEnter(Collider other)
     {
-        
+        TryCollect(other);
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnCollisionEnter(Collision collision)
     {
-        
+        TryCollect(collision.collider);
+    }
+
+    void TryCollect(Collider other)
+    {
+        Player player = other.GetComponentInParent<Player>();
+        if (collected || player == null)
+        {
+            return;
+        }
+
+        collected = true;
+        player.ActivateJumpBoost(duration);
+        Destroy(gameObject);
     }
 }
