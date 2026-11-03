@@ -286,10 +286,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Coin_Cross_Swords
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8d1672371998d4b4197e4fc61c67e504, type: 3}
+      propertyPath: m_TagString
+      value: coin
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8d1672371998d4b4197e4fc61c67e504, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1764730413}
   m_SourcePrefab: {fileID: 100100000, guid: 8d1672371998d4b4197e4fc61c67e504, type: 3}
 --- !u!1001 &118832432
 PrefabInstance:
@@ -809,10 +816,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59d9953e9efef2949a2381c4df83476f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  target: {fileID: 1884550546}
-  offset: {x: 0, y: 3, z: -6}
-  smoothSpeed: 5
-  followRotation: 1
 --- !u!1 &354915328 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: b493ecb77d5f0e24db1cb3b04bb4774c, type: 3}
@@ -4716,6 +4719,47 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1576785438}
   m_SourcePrefab: {fileID: 100100000, guid: 45d0027b51cbd4763926e75526591c67, type: 3}
+--- !u!1 &1764730409 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 8d1672371998d4b4197e4fc61c67e504, type: 3}
+  m_PrefabInstance: {fileID: 100154443}
+  m_PrefabAsset: {fileID: 0}
+--- !u!58 &1764730413
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1764730409}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0.0006223917, y: 0.011320263}
+  m_Radius: 0.20000002
 --- !u!1001 &1808927420
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4944,11 +4988,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e6ee60cd48ca7fa478e3065e30330864, type: 3}
---- !u!4 &1884550546 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8983737706938824221, guid: cb0dd6ce4e2684443b75bd98cace5f9e, type: 3}
-  m_PrefabInstance: {fileID: 4094314870800823099}
-  m_PrefabAsset: {fileID: 0}
 --- !u!143 &1884550553
 CharacterController:
   m_ObjectHideFlags: 0
@@ -4974,6 +5013,19 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1884550560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 429357021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ece68cb8eff9f664fb842fdf6488d3ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CoinPickup
+  coins: 0
 --- !u!1001 &1944573251
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5326,6 +5378,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4780520995115470223, guid: cb0dd6ce4e2684443b75bd98cace5f9e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1884550553}
+    - targetCorrespondingSourceObject: {fileID: 4780520995115470223, guid: cb0dd6ce4e2684443b75bd98cace5f9e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1884550560}
   m_SourcePrefab: {fileID: 100100000, guid: cb0dd6ce4e2684443b75bd98cace5f9e, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
