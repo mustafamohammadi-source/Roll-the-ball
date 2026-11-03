@@ -1,62 +1,36 @@
+
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class Player : MonoBehaviour
+public class CameraFollow : MonoBehaviour
 {
-    Vector2 movement;
-    Rigidbody r;
-    Collider playerCollider;
-    float jumpBoostExpiresAt;
+    public Transform target;
+    public Vector3 offset = new Vector3(0f, 4f, -7f);
+    public float smoothSpeed = 8f;
+    public Vector3 lookOffset = new Vector3(0f, 1.5f, 0f);
 
-    public float acceleration;
-
-    [SerializeField] float jumpForce = 5f;
-    [SerializeField] float boostedJumpForce = 10f;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void LateUpdate()
     {
-        r = GetComponent<Rigidbody>();
-        playerCollider = GetComponent<Collider>();
-    }
+        if (target == null) return;
 
-    // Update is called once per frame
-    void Update()
-    {
-        r.AddForce(Vector3.forward * movement.y * acceleration);
-    }
+        // Follow the player using a fixed world-space offset
+        Vector3 targetPosition = target.position + offset;
 
-    void OnMove(InputValue value)
-    {
-        movement = value.Get<Vector2>();
-    }
+        transform.position = Vector3.Lerp(
+            transform.position,
+            targetPosition,
+            1f - Mathf.Exp(-smoothSpeed * Time.deltaTime)
+        );
 
-    void OnJump(InputValue value)
-    {
-        if (!value.isPressed || !IsGrounded())
+        // Look at the player without orbiting around them
+        Vector3 lookPosition = target.position + lookOffset;
+        Vector3 direction = lookPosition - transform.position;
+
+        if (direction.sqrMagnitude > 0.001f)
         {
-            return;
+            transform.rotation = Quaternion.LookRotation(
+                direction,
+                Vector3.up
+            );
         }
-
-        float force = Time.time < jumpBoostExpiresAt ? boostedJumpForce : jumpForce;
-        r.AddForce(Vector3.up * force, ForceMode.Impulse);
-    }
-
-    public void ActivateJumpBoost(float duration)
-    {
-        if (Time.time >= jumpBoostExpiresAt)
-        {
-            jumpBoostExpiresAt = Time.time + Mathf.Clamp(duration, 0f, 10f);
-        }
-    }
-
-    bool IsGrounded()
-    {
-        return Physics.Raycast(
-            playerCollider.bounds.center,
-            Vector3.down,
-            playerCollider.bounds.extents.y + 0.1f,
-            Physics.DefaultRaycastLayers,
-            QueryTriggerInteraction.Ignore);
     }
 }
