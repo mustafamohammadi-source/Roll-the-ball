@@ -3,42 +3,98 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-    Vector2 movement;
-    Rigidbody r;
-    Collider playerCollider;
-    float jumpBoostExpiresAt;
+    private Vector2 movement;
+    private Rigidbody r;
+    private Collider playerCollider;
 
-    public float acceleration;
+    private float jumpBoostExpiresAt;
 
-    [SerializeField] float jumpForce = 5f;
-    [SerializeField] float boostedJumpForce = 10f;
+    [SerializeField] private float speed = 5f;
+    [SerializeField] private float jumpForce = 5f;
+    [SerializeField] private float boostedJumpForce = 10f;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Start()
     {
         r = GetComponent<Rigidbody>();
         playerCollider = GetComponent<Collider>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        r.AddForce(Vector3.forward * movement.y * acceleration);
+        UpdateMovement();
     }
 
-    void OnMove(InputValue value)
+    private void FixedUpdate()
     {
-        movement = value.Get<Vector2>();
+        Vector3 moveDirection = GetMovementDirection();
+
+        Vector3 velocity = r.linearVelocity;
+        velocity.x = moveDirection.x * speed;
+        velocity.z = moveDirection.z * speed;
+
+        r.linearVelocity = velocity;
     }
 
-    void OnJump(InputValue value)
+    private void UpdateMovement()
     {
-        if (!value.isPressed || !IsGrounded())
+        movement = Vector2.zero;
+
+        if (Keyboard.current != null)
         {
-            return;
+            if (Keyboard.current.wKey.isPressed ||
+                Keyboard.current.upArrowKey.isPressed)
+                movement.y += 1f;
+
+            if (Keyboard.current.sKey.isPressed ||
+                Keyboard.current.downArrowKey.isPressed)
+                movement.y -= 1f;
+
+            if (Keyboard.current.dKey.isPressed ||
+                Keyboard.current.rightArrowKey.isPressed)
+                movement.x += 1f;
+
+            if (Keyboard.current.aKey.isPressed ||
+                Keyboard.current.leftArrowKey.isPressed)
+                movement.x -= 1f;
         }
 
-        float force = Time.time < jumpBoostExpiresAt ? boostedJumpForce : jumpForce;
+        movement = Vector2.ClampMagnitude(movement, 1f);
+    }
+
+    private Vector3 GetMovementDirection()
+    {
+        Transform cam = Camera.main != null
+            ? Camera.main.transform
+            : transform;
+
+        Vector3 forward = cam.forward;
+        Vector3 right = cam.right;
+
+        forward.y = 0f;
+        right.y = 0f;
+
+        forward.Normalize();
+        right.Normalize();
+
+        return (forward * movement.y + right * movement.x).normalized
+            * movement.magnitude;
+    }
+
+    public void OnJump(InputValue value)
+    {
+        if (!value.isPressed || !IsGrounded())
+            return;
+
+        float force = Time.time < jumpBoostExpiresAt
+            ? boostedJumpForce
+            : jumpForce;
+
+        if (r.linearVelocity.y < 0f)
+        {
+            r.linearVelocity = new Vector3(
+                r.linearVelocity.x, 0f, r.linearVelocity.z);
+        }
+
         r.AddForce(Vector3.up * force, ForceMode.Impulse);
     }
 
@@ -46,11 +102,12 @@ public class Player : MonoBehaviour
     {
         if (Time.time >= jumpBoostExpiresAt)
         {
-            jumpBoostExpiresAt = Time.time + Mathf.Clamp(duration, 0f, 10f);
+            jumpBoostExpiresAt =
+                Time.time + Mathf.Clamp(duration, 0f, 10f);
         }
     }
 
-    bool IsGrounded()
+    private bool IsGrounded()
     {
         return Physics.Raycast(
             playerCollider.bounds.center,
